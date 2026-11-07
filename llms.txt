@@ -1,16 +1,10 @@
 # readme-score
 
-> Score a README on ten documented checks: title, summary, install and usage sections, tagged code blocks, license, placeholders, relative links, length and image alt text Python package `trysac-readme-score`, import name `readme_score`, MIT licensed,
-> Python >= 3.10, no runtime dependencies.
+> Score a README on ten documented checks: title, summary, install and usage sections, tagged code blocks, license, placeholders, relative links, length and image alt text. Python package `readme_score`, MIT licensed. Python >= 3.10, no runtime dependencies.
 
 ## Docs
 
-- [README](README.md): problem, install, usage example
-- [AGENTS](AGENTS.md): commands, folder map, conventions, limits
-- [Architecture](docs/ARCHITECTURE.md): shape of the package and its public API
-- [Testing](docs/TESTING.md): how to run and extend the tests
-
-## Optional
-
-- [Stack](docs/STACK.md): tools used and discarded
-- [Changelog](CHANGELOG.md): release history
+- [README](README.md): problem, install, usage
+- [Security](docs/SECURITY.md): threat model
+- [Testing](docs/TESTING.md): testing policy
+- [Architecture](docs/ARCHITECTURE.md): parsing approach

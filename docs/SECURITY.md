@@ -2,18 +2,13 @@
 
 ## Threat model
 
-`trysac-readme-score` is a pure library without I/O. The main risks are:
+`trysac-readme-score` is a pure Python library designed to process text strings.
 
-- **Supply chain**: a compromised dependency or CI action. Mitigation: no runtime dependencies,
-  Dependabot weekly updates, actions pinned to major versions, minimal workflow permissions.
-- **Leaked secrets**: tokens committed by mistake. Mitigation: `gitleaks` runs in the local gates
-  and in CI; `.env` files are git-ignored.
-- **Untrusted input**: callers may pass hostile strings. Mitigation: validate input and fail with
-  explicit exceptions; never `eval`, `exec` or deserialize untrusted data.
+### Defended
 
-## Publishing
+- **Denial of Service (DoS)**: The library enforces an explicit `max_bytes` limit (default 1 MiB) on the input text. If the input exceeds this, `ReadmeError` is raised immediately before significant processing occurs.
+- **Path Traversal**: When validating relative links, the CLI and library resolve paths against the base directory. It strictly checks that the resolved target remains within the base directory. If a link attempts to escape the root directory, it is flagged as a failure (`escapes root`).
 
-Releases are published to PyPI with trusted publishing (OIDC) when available, never with a
-long-lived token stored in the repository.
+### Not defended
 
-To report a vulnerability, see [SECURITY.md](../SECURITY.md).
+- **Hostile Input**: The library does not sanitize or sanitize HTML/Markdown for rendering. It is intended for analysis, not for display to a browser. Callers are responsible for sanitizing output if they intend to render the README content.

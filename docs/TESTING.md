@@ -1,20 +1,11 @@
 # Testing
 
-## Running
+## Coverage
 
-```sh
-uv run pytest --cov=readme_score   # tests with coverage report
-uv run python scripts/check.py      # every gate, as CI and the factory run it
-```
+Tests are located in `tests/test_readme_score.py` and mirror the public API and internal logic modules.
 
-## Policy
-
-- Branch coverage of `src/readme_score` must stay at or above 80 %; the gate fails below it.
-- Tests exercise the public API (`import readme_score`) and assert every observable effect:
-  return values, raised exceptions and their messages.
-- Each bug fix starts with a failing test that reproduces it.
-- Tests are deterministic: no network, no wall clock, no dependence on test order.
-
-## Layout
-
-`tests/test_<module>.py` mirrors each public module. Shared fixtures go in `tests/conftest.py`.
+- **`score_readme` Logic**: Exercises all ten quality checks (R01-R10). Tests include empty strings, strings that fail every check, and strings that pass every check.
+- **Relative Link Resolution**: Verifies that links to missing files fail, while links to existing files (injected via the `exists` predicate) pass. Validates that paths escaping the root directory are caught.
+- **Error Handling**: Verifies that input exceeding `MAX_FILE_BYTES` raises the appropriate `ReadmeError`.
+- **CLI**: Verifies exit codes (0 for success, 1 for score below min, 2 for errors) and formatted output (text or json).
+- **Scoring**: Validates the numerical scoring calculation and letter grade mappings.
