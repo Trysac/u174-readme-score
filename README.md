@@ -1,48 +1,41 @@
 # readme-score
 
-[![PyPI version](https://img.shields.io/pypi/v/trysac-readme-score)](https://pypi.org/project/trysac-readme-score/)
-[![License: MIT](https://img.shields.io/pypi/l/trysac-readme-score)](LICENSE)
-[![CI](https://github.com/Trysac/u174-readme-score/actions/workflows/ci.yml/badge.svg)](https://github.com/Trysac/u174-readme-score/actions/workflows/ci.yml)
+[![CI](https://github.com/Trysac/u174-readme-score/actions/workflows/ci.yml/badge.svg)](https://github.com/Trysac/u174-readme-score/actions)
 
-Score a README on ten documented checks: title, summary, install and usage sections, tagged code blocks, license, placeholders, relative links, length and image alt text
+Score a README on ten documented checks: title, summary, install and usage sections, tagged code blocks, license, placeholders, relative links, length and image alt text.
 
 ## Problem
 
-Describe in two or three sentences the concrete problem this utility solves, who hits it, and what
-they do today without it. Replace this paragraph when the first real feature lands.
+Open source READMEs often lack installation steps, usage examples, or license notes. Generic Markdown linters focus on syntax formatting; `readme-score` assesses whether the README provides the information a user actually needs to get started.
 
-## Install
+## Installation
 
-```sh
+```bash
 pip install trysac-readme-score
-# or
-uv add trysac-readme-score
 ```
-
-Requires Python 3.10 or newer. No runtime dependencies.
 
 ## Usage
 
 ```python
-import readme_score
+from readme_score import score_readme
 
-# normalize() trims surrounding whitespace and lower-cases the text.
-print(readme_score.normalize("  Hello World "))  # -> "hello world"
-
-# Blank input is rejected explicitly instead of returning an empty string.
-try:
-    readme_score.normalize("   ")
-except ValueError as exc:
-    print(f"rejected: {exc}")
+markdown = "# Project Name\n\nA useful tool.\n\n## Installation\npip install foo"
+report = score_readme(markdown)
+print(f"Score: {report.score} ({report.grade})")
+for check in report.checks:
+    if check.status != "pass":
+        print(f"Check {check.id} failed: {check.detail}")
 ```
 
-## Documentation
+## API, Limits and Options
 
-- [Architecture](docs/ARCHITECTURE.md) and [decisions](docs/decisions/)
-- [Testing](docs/TESTING.md) and [security](docs/SECURITY.md)
-- [Project record](docs/PROJECT.md) and [stack](docs/STACK.md)
-- [Changelog](CHANGELOG.md) and [contributing guide](CONTRIBUTING.md)
+- `score_readme(text, exists=None, max_bytes=1_048_576)`: Analyzes the string and returns a `Report` object.
+- `grade(score)`: Returns a letter grade ('A' through 'F').
+- Limits: Input is limited to `1_048_576` bytes. Input exceeding this raises `ReadmeError('input_too_large')`.
+- Options: The `exists` callable can be injected to validate relative links.
 
-## License
+## Why not generic linters?
 
-[MIT](LICENSE) (c) 2026 Miguel Gomez
+Generic linters (like `markdownlint`) check syntax and style formatting. `readme-score` verifies that the document contains essential content sections (Installation, Usage, License) and has valid relative linking.
+
+See [Security Notes](docs/SECURITY.md).

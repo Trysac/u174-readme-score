@@ -19,6 +19,9 @@ classifiers = [
 ]
 dependencies = []
 
+[project.scripts]
+readme-score = "readme_score.__main__:main"
+
 [project.urls]
 Homepage = "https://github.com/Trysac/u174-readme-score"
 Source = "https://github.com/Trysac/u174-readme-score"

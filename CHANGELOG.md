@@ -9,4 +9,5 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- Add readme-score library and CLI for scoring README files across ten weighted structural and content checks.
 - Initial project structure from the factory utility template.

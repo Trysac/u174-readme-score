@@ -1,21 +1,57 @@
-"""Score a README on ten documented checks: title, summary, install and usage sections, tagged code blocks, license, placeholders, relative links, length and image alt text"""
+"""README scoring utility evaluating completeness, readability, and structural health."""
 
 from __future__ import annotations
 
-__all__ = ["__version__", "normalize"]
+import logging
+from dataclasses import dataclass
+from typing import Literal
+
+from readme_score.checker import grade, score_readme
+from readme_score.errors import ReadmeError
+
+__all__ = [
+    "CheckResult",
+    "ReadmeError",
+    "Report",
+    "__version__",
+    "grade",
+    "score_readme",
+]
 
 __version__ = "0.1.0"
 
+logging.getLogger(__name__).addHandler(logging.NullHandler())
 
-def normalize(value: str) -> str:
-    """Return ``value`` trimmed and lower-cased.
 
-    Placeholder API created by the template: replace it with the utility's real behavior.
+@dataclass(frozen=True)
+class CheckResult:
+    """Result of a single README check.
 
-    Raises:
-        ValueError: if ``value`` is empty or only whitespace.
+    Attributes:
+        id: Unique check identifier (e.g., 'R01').
+        name: Human-readable check name.
+        weight: Numerical weight allocated towards the total score.
+        status: Outcome status ('pass', 'fail', or 'skipped').
+        detail: Context or diagnostic failure message, if applicable.
     """
-    cleaned = value.strip()
-    if not cleaned:
-        raise ValueError("value must not be empty")
-    return cleaned.lower()
+
+    id: str
+    name: str
+    weight: int
+    status: Literal["pass", "fail", "skipped"]
+    detail: str | None = None
+
+
+@dataclass(frozen=True)
+class Report:
+    """Evaluation report summarizing all README checks.
+
+    Attributes:
+        score: Overall score from 0 to 100.
+        grade: Letter grade ('A', 'B', 'C', 'D', 'F').
+        checks: Sequence of individual check results.
+    """
+
+    score: int
+    grade: Literal["A", "B", "C", "D", "F"]
+    checks: tuple[CheckResult, ...]
