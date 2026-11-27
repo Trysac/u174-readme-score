@@ -10,8 +10,10 @@ Open source READMEs often lack installation steps, usage examples, or license no
 
 ## Installation
 
+Not published to PyPI yet. Install it from GitHub:
+
 ```bash
-pip install trysac-readme-score
+pip install "git+https://github.com/Trysac/u174-readme-score"
 ```
 
 ## Usage
